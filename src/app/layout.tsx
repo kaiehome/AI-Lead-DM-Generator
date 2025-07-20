@@ -6,7 +6,9 @@ import { Providers } from "./providers";
 const inter = Inter({ 
   subsets: ["latin"],
   display: 'swap',
-  fallback: ['system-ui', 'arial']
+  fallback: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'sans-serif'],
+  preload: true,
+  adjustFontFallback: true
 });
 
 export const metadata: Metadata = {

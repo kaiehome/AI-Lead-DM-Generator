@@ -12,9 +12,20 @@ export interface Lead {
   role: string
   company: string
   linkedin_url?: string
-  message?: string
-  status: 'Draft' | 'Approved' | 'Sent'
+  status: 'Active' | 'Inactive' | 'Converted'
   created_at: string
+  updated_at: string
+}
+
+export interface Message {
+  id: string
+  lead_id: string
+  content: string
+  status: 'Draft' | 'Approved' | 'Sent'
+  template_used?: string
+  ai_model?: string
+  character_count?: number
+  generated_at: string
   updated_at: string
 }
 
@@ -23,7 +34,6 @@ export interface CreateLeadData {
   role: string
   company: string
   linkedin_url?: string
-  message?: string
 }
 
 export interface UpdateLeadData {
@@ -31,6 +41,21 @@ export interface UpdateLeadData {
   role?: string
   company?: string
   linkedin_url?: string
-  message?: string
+  status?: 'Active' | 'Inactive' | 'Converted'
+}
+
+export interface CreateMessageData {
+  lead_id: string
+  content: string
+  template_used?: string
+  ai_model?: string
+  character_count?: number
+}
+
+export interface UpdateMessageData {
+  content?: string
   status?: 'Draft' | 'Approved' | 'Sent'
+  template_used?: string
+  ai_model?: string
+  character_count?: number
 } 
