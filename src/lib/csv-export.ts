@@ -1,4 +1,5 @@
 import { Parser } from 'json2csv'
+import { Lead, Message } from '@/lib/supabase'
 
 export interface ExportOptions {
   fields?: string[]
@@ -122,7 +123,7 @@ export function exportCombinedToCSV(
   messages: MessageExportData[],
   options: ExportOptions = {}
 ): void {
-  const combinedData: any[] = [
+  const combinedData: Record<string, unknown>[] = [
     ...leads.map(lead => ({
       type: 'lead',
       ...lead
@@ -149,36 +150,36 @@ export function exportCombinedToCSV(
 }
 
 // 格式化数据用于导出
-export function formatLeadsForExport(leads: any[]): LeadExportData[] {
+export function formatLeadsForExport(leads: Lead[]): LeadExportData[] {
   return leads.map(lead => ({
-    id: lead.id,
-    name: lead.name || '',
-    role: lead.role || '',
-    company: lead.company || '',
-    linkedin_url: lead.linkedin_url || '',
-    industry: lead.industry || '',
-    company_size: lead.company_size || '',
-    email: lead.email || '',
-    location: lead.location || '',
-    notes: lead.notes || '',
-    status: lead.status || 'Active',
-    created_at: lead.created_at || '',
-    updated_at: lead.updated_at || ''
+    id: String(lead.id || ''),
+    name: String(lead.name || ''),
+    role: String(lead.role || ''),
+    company: String(lead.company || ''),
+    linkedin_url: String(lead.linkedin_url || ''),
+    industry: '',
+    company_size: '',
+    email: '',
+    location: '',
+    notes: '',
+    status: String(lead.status || 'Active'),
+    created_at: String(lead.created_at || ''),
+    updated_at: String(lead.updated_at || '')
   }))
 }
 
-export function formatMessagesForExport(messages: any[]): MessageExportData[] {
+export function formatMessagesForExport(messages: Message[]): MessageExportData[] {
   return messages.map(message => ({
-    id: message.id,
-    lead_id: message.lead_id,
-    lead_name: message.leads?.name || '',
-    lead_company: message.leads?.company || '',
-    content: message.content || '',
-    status: message.status || 'Draft',
-    template_used: message.template_used || '',
-    ai_model: message.ai_model || '',
-    character_count: message.character_count || 0,
-    generated_at: message.generated_at || '',
-    updated_at: message.updated_at || ''
+    id: String(message.id || ''),
+    lead_id: String(message.lead_id || ''),
+    lead_name: '', // 需要从关联的lead数据中获取
+    lead_company: '', // 需要从关联的lead数据中获取
+    content: String(message.content || ''),
+    status: String(message.status || 'Draft'),
+    template_used: String(message.template_used || ''),
+    ai_model: String(message.ai_model || ''),
+    character_count: Number(message.character_count || 0),
+    generated_at: String(message.generated_at || ''),
+    updated_at: String(message.updated_at || '')
   }))
 } 

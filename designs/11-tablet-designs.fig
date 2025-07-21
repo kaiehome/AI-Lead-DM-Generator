@@ -1,0 +1,360 @@
+# Figma Design: Tablet Responsive Designs
+# File: 11-tablet-designs.fig
+# Created: 2024-01-21
+# Status: Complete
+
+## Tablet Design System
+
+### Breakpoint Specifications
+- **Target Width**: 768px - 1024px
+- **Orientation**: Landscape (768x1024) and Portrait (1024x768)
+- **Device Examples**: iPad, iPad Pro, Android tablets
+- **Design Approach**: Optimized for touch interaction
+
+### Layout Grid System
+- **Columns**: 12 columns
+- **Gutter**: 16px
+- **Margin**: 24px (left/right)
+- **Container Max Width**: 960px
+- **Baseline Grid**: 8px
+
+## Page Adaptations
+
+### 1. Dashboard Page (Tablet)
+
+#### Header Section
+- **Logo**: 左侧, 32px height
+- **Navigation**: 水平菜单, 图标 + 文字
+- **User Menu**: 右侧, 头像 + 下拉菜单
+- **Height**: 64px
+
+#### Stats Cards Grid
+- **Layout**: 2x2 grid (4 cards)
+- **Card Size**: 456px x 120px
+- **Spacing**: 16px between cards
+- **Content**: 图标 + 数字 + 标签
+
+#### Quick Actions
+- **Layout**: 水平排列, 4-6个按钮
+- **Button Size**: 120px x 48px
+- **Spacing**: 12px between buttons
+- **Touch Target**: 最小44px
+
+#### Recent Activity
+- **Layout**: 单列列表
+- **Item Height**: 72px
+- **Avatar**: 40px 圆形
+- **Content**: 标题 + 描述 + 时间
+
+### 2. Leads Table Page (Tablet)
+
+#### Search and Filter Bar
+- **Layout**: 2行布局
+- **Row 1**: 搜索框 + 筛选按钮
+- **Row 2**: 筛选选项展开区域
+- **Search Input**: 300px width
+- **Filter Button**: 图标 + 文字
+
+#### Table Adaptation
+- **Scroll**: 水平滚动表格
+- **Column Priority**:
+  - 必显示: 选择框, 姓名, 公司, 状态, 操作
+  - 可选: 职位, 创建时间
+- **Row Height**: 64px
+- **Touch Targets**: 44px minimum
+
+#### Bulk Actions
+- **Position**: 固定在表格上方
+- **Layout**: 水平按钮组
+- **Button Size**: 100px x 40px
+- **Spacing**: 8px between buttons
+
+### 3. Message Generator Page (Tablet)
+
+#### Layout Structure
+- **Split View**: 左侧表单, 右侧预览
+- **Split Ratio**: 40% / 60%
+- **Min Width**: 320px per section
+
+#### Lead Selection Area
+- **Height**: 120px
+- **Layout**: 网格布局, 2-3列
+- **Card Size**: 140px x 100px
+- **Selection**: 复选框 + 悬停效果
+
+#### Message Parameters
+- **Layout**: 垂直排列
+- **Group Spacing**: 24px
+- **Input Size**: 100% width
+- **Dropdown**: 全宽下拉菜单
+
+#### Generate Button
+- **Size**: 200px x 48px
+- **Position**: 表单底部居中
+- **Loading State**: 按钮内加载动画
+
+#### Message Preview
+- **Height**: 400px
+- **Border**: 1px solid #E5E7EB
+- **Padding**: 20px
+- **Scroll**: 垂直滚动
+- **Actions**: 底部按钮组
+
+### 4. Leads Management Page (Tablet)
+
+#### Add Lead Form
+- **Layout**: 2列网格
+- **Column 1**: 姓名, 职位
+- **Column 2**: 公司, LinkedIn URL
+- **Full Width**: 状态选择, 备注
+- **Button Group**: 保存/取消, 水平排列
+
+#### Lead List
+- **Layout**: 卡片网格
+- **Grid**: 2列布局
+- **Card Size**: 440px x 160px
+- **Content**: 头像 + 信息 + 操作按钮
+- **Actions**: 悬停显示操作菜单
+
+#### Edit Modal
+- **Size**: 600px x 500px
+- **Position**: 屏幕居中
+- **Backdrop**: 半透明黑色
+- **Form**: 单列布局, 全宽输入框
+
+### 5. Messages Management Page (Tablet)
+
+#### Search and Filter
+- **Layout**: 水平排列
+- **Search**: 200px width
+- **Filters**: 下拉菜单组
+- **Sort**: 右侧排序按钮
+
+#### Message List
+- **Layout**: 卡片列表
+- **Card Size**: 100% width x 120px
+- **Content**: 消息预览 + 客户信息 + 状态
+- **Actions**: 右侧操作按钮组
+
+#### Message Detail
+- **Modal Size**: 700px x 600px
+- **Layout**: 2列 (消息内容 + 客户信息)
+- **Actions**: 底部按钮组
+
+### 6. Settings Page (Tablet)
+
+#### Navigation
+- **Layout**: 顶部标签导航
+- **Tabs**: 水平滚动标签
+- **Active State**: 下划线指示器
+
+#### Content Area
+- **Layout**: 单列布局
+- **Section Cards**: 全宽卡片
+- **Form Groups**: 2列网格 (标签 + 输入)
+- **Actions**: 底部保存按钮
+
+## Component Adaptations
+
+### Button Components
+- **Primary Button**: 120px x 44px
+- **Secondary Button**: 100px x 40px
+- **Icon Button**: 44px x 44px
+- **Touch Target**: 最小44px
+
+### Form Components
+- **Input Height**: 44px
+- **Dropdown Height**: 44px
+- **Checkbox Size**: 20px x 20px
+- **Radio Size**: 20px x 20px
+
+### Navigation Components
+- **Tab Height**: 48px
+- **Menu Item**: 44px height
+- **Breadcrumb**: 32px height
+- **Icon Size**: 20px x 20px
+
+### Card Components
+- **Border Radius**: 12px
+- **Padding**: 20px
+- **Shadow**: 0 2px 8px #00000010
+- **Hover Effect**: 轻微上移 + 阴影加深
+
+## Touch Interaction
+
+### Touch Targets
+- **Minimum Size**: 44px x 44px
+- **Spacing**: 8px between targets
+- **Visual Feedback**: 按下状态变化
+
+### Gesture Support
+- **Swipe**: 表格行滑动操作
+- **Pinch**: 图片缩放
+- **Long Press**: 上下文菜单
+- **Double Tap**: 快速操作
+
+### Scroll Behavior
+- **Smooth Scrolling**: 60fps
+- **Pull to Refresh**: 列表页面
+- **Infinite Scroll**: 长列表
+- **Sticky Headers**: 表格头部
+
+## Typography Scale
+
+### Font Sizes
+- **H1**: 28px (页面标题)
+- **H2**: 24px (区块标题)
+- **H3**: 20px (卡片标题)
+- **Body**: 16px (正文)
+- **Small**: 14px (辅助文字)
+- **Caption**: 12px (标签)
+
+### Line Heights
+- **Tight**: 1.2 (标题)
+- **Normal**: 1.4 (正文)
+- **Relaxed**: 1.6 (长文本)
+
+### Font Weights
+- **Light**: 300
+- **Regular**: 400
+- **Medium**: 500
+- **Semibold**: 600
+- **Bold**: 700
+
+## Color Adaptations
+
+### Background Colors
+- **Primary**: #FFFFFF
+- **Secondary**: #F9FAFB
+- **Tertiary**: #F3F4F6
+- **Overlay**: #00000080
+
+### Text Colors
+- **Primary**: #111827
+- **Secondary**: #6B7280
+- **Tertiary**: #9CA3AF
+- **Inverse**: #FFFFFF
+
+### Interactive Colors
+- **Primary**: #3B82F6
+- **Success**: #10B981
+- **Warning**: #F59E0B
+- **Error**: #EF4444
+
+## Animation Guidelines
+
+### Transition Timing
+- **Fast**: 150ms (按钮点击)
+- **Normal**: 250ms (页面切换)
+- **Slow**: 350ms (复杂动画)
+
+### Easing Functions
+- **Ease Out**: 快速开始, 缓慢结束
+- **Ease In Out**: 平滑过渡
+- **Bounce**: 弹性效果 (通知)
+
+### Animation Types
+- **Fade**: 透明度变化
+- **Slide**: 位置移动
+- **Scale**: 大小变化
+- **Rotate**: 旋转效果
+
+## Performance Considerations
+
+### Rendering Optimization
+- **Virtual Scrolling**: 长列表
+- **Lazy Loading**: 图片和组件
+- **Debouncing**: 搜索输入
+- **Throttling**: 滚动事件
+
+### Touch Performance
+- **60fps**: 所有动画
+- **Immediate Feedback**: 按钮点击
+- **Smooth Scrolling**: 列表滚动
+- **Reduced Motion**: 可访问性选项
+
+### Memory Management
+- **Component Recycling**: 列表项
+- **Image Optimization**: WebP格式
+- **Code Splitting**: 按页面加载
+- **Caching**: 静态资源缓存
+
+## Accessibility Features
+
+### Touch Accessibility
+- **Large Touch Targets**: 最小44px
+- **Clear Visual Feedback**: 按下状态
+- **Gesture Alternatives**: 按钮替代手势
+- **Voice Control**: 语音操作支持
+
+### Screen Reader Support
+- **Semantic HTML**: 正确的标签结构
+- **ARIA Labels**: 描述性标签
+- **Focus Management**: 清晰的焦点顺序
+- **Status Announcements**: 状态变化通知
+
+### Visual Accessibility
+- **High Contrast**: 颜色对比度 > 4.5:1
+- **Large Text**: 支持动态字体大小
+- **Reduced Motion**: 减少动画选项
+- **Color Independence**: 不依赖颜色传达信息
+
+## Testing Considerations
+
+### Device Testing
+- **iPad**: 768x1024, 1024x768
+- **iPad Pro**: 1024x1366, 1366x1024
+- **Android Tablets**: 各种尺寸
+- **Hybrid Devices**: 可转换设备
+
+### Orientation Testing
+- **Landscape**: 横向模式
+- **Portrait**: 纵向模式
+- **Rotation**: 动态旋转
+- **Split Screen**: 分屏模式
+
+### Interaction Testing
+- **Touch Accuracy**: 触摸精度测试
+- **Gesture Recognition**: 手势识别
+- **Keyboard Navigation**: 键盘导航
+- **Voice Control**: 语音控制测试
+
+## Development Guidelines
+
+### CSS Implementation
+```css
+/* Tablet Breakpoint */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    max-width: 960px;
+    margin: 0 24px;
+  }
+  
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+```
+
+### Component Props
+```typescript
+interface TabletProps {
+  orientation: 'landscape' | 'portrait';
+  touchEnabled: boolean;
+  reducedMotion: boolean;
+  highContrast: boolean;
+}
+```
+
+### Performance Monitoring
+- **Core Web Vitals**: LCP, FID, CLS
+- **Touch Response Time**: < 100ms
+- **Animation Frame Rate**: 60fps
+- **Memory Usage**: < 100MB 

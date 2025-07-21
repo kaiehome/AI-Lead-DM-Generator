@@ -1,0 +1,415 @@
+# Figma Design: Mobile Responsive Designs
+# File: 12-mobile-designs.fig
+# Created: 2024-01-21
+# Status: Complete
+
+## Mobile Design System
+
+### Breakpoint Specifications
+- **Target Width**: 375px - 768px
+- **Orientation**: Portrait (375x667) and Landscape (667x375)
+- **Device Examples**: iPhone, Android phones, small tablets
+- **Design Approach**: Mobile-first, touch-optimized
+
+### Layout Grid System
+- **Columns**: 4 columns
+- **Gutter**: 12px
+- **Margin**: 16px (left/right)
+- **Container Max Width**: 100%
+- **Baseline Grid**: 4px
+
+## Page Adaptations
+
+### 1. Dashboard Page (Mobile)
+
+#### Header Section
+- **Logo**: 左侧, 24px height
+- **Menu Button**: 右侧汉堡菜单
+- **Height**: 56px
+- **Background**: 白色, 底部阴影
+
+#### Stats Cards
+- **Layout**: 单列垂直排列
+- **Card Size**: 100% width x 80px
+- **Spacing**: 12px between cards
+- **Content**: 图标 + 数字 + 标签 (水平排列)
+
+#### Quick Actions
+- **Layout**: 2x2 网格
+- **Button Size**: 160px x 48px
+- **Spacing**: 12px between buttons
+- **Touch Target**: 最小44px
+
+#### Recent Activity
+- **Layout**: 单列列表
+- **Item Height**: 64px
+- **Avatar**: 32px 圆形
+- **Content**: 标题 + 时间 (垂直排列)
+
+### 2. Leads Table Page (Mobile)
+
+#### Search and Filter
+- **Layout**: 垂直排列
+- **Search Input**: 100% width, 44px height
+- **Filter Button**: 全宽按钮, 展开筛选选项
+- **Filter Panel**: 全屏覆盖面板
+
+#### Table Adaptation
+- **Layout**: 卡片列表
+- **Card Size**: 100% width x 120px
+- **Content**: 头像 + 信息 + 状态标签
+- **Actions**: 底部操作按钮组
+
+#### Bulk Actions
+- **Position**: 固定在底部
+- **Layout**: 水平按钮组
+- **Button Size**: 80px x 40px
+- **Background**: 白色, 顶部阴影
+
+### 3. Message Generator Page (Mobile)
+
+#### Layout Structure
+- **Single Column**: 垂直排列所有元素
+- **Sections**: 清晰的视觉分隔
+- **Spacing**: 24px between sections
+
+#### Lead Selection
+- **Layout**: 水平滚动列表
+- **Card Size**: 120px x 100px
+- **Scroll**: 平滑水平滚动
+- **Selection**: 复选框 + 视觉反馈
+
+#### Message Parameters
+- **Layout**: 垂直排列
+- **Input Size**: 100% width
+- **Dropdown**: 全宽下拉菜单
+- **Toggle**: 开关组件
+
+#### Generate Button
+- **Size**: 100% width x 48px
+- **Position**: 固定在底部
+- **Loading State**: 按钮内加载动画
+
+#### Message Preview
+- **Height**: 300px
+- **Border**: 1px solid #E5E7EB
+- **Padding**: 16px
+- **Scroll**: 垂直滚动
+- **Actions**: 底部按钮组
+
+### 4. Leads Management Page (Mobile)
+
+#### Add Lead Form
+- **Layout**: 单列垂直排列
+- **Input Size**: 100% width
+- **Spacing**: 16px between fields
+- **Button Group**: 垂直排列, 保存/取消
+
+#### Lead List
+- **Layout**: 卡片列表
+- **Card Size**: 100% width x 140px
+- **Content**: 头像 + 信息 + 操作按钮
+- **Actions**: 右侧操作菜单
+
+#### Edit Modal
+- **Size**: 全屏覆盖
+- **Header**: 标题 + 关闭按钮
+- **Form**: 单列布局
+- **Actions**: 底部按钮组
+
+### 5. Messages Management Page (Mobile)
+
+#### Search and Filter
+- **Layout**: 垂直排列
+- **Search**: 100% width
+- **Filters**: 下拉菜单组
+- **Sort**: 右侧排序按钮
+
+#### Message List
+- **Layout**: 卡片列表
+- **Card Size**: 100% width x 100px
+- **Content**: 消息预览 + 客户信息 + 状态
+- **Actions**: 右侧操作按钮
+
+#### Message Detail
+- **Modal Size**: 全屏覆盖
+- **Layout**: 单列 (消息内容 + 客户信息)
+- **Actions**: 底部按钮组
+
+### 6. Settings Page (Mobile)
+
+#### Navigation
+- **Layout**: 垂直列表
+- **Items**: 全宽菜单项
+- **Height**: 56px per item
+- **Icon**: 左侧图标 + 右侧箭头
+
+#### Content Area
+- **Layout**: 单列布局
+- **Section Cards**: 全宽卡片
+- **Form Groups**: 垂直排列 (标签 + 输入)
+- **Actions**: 底部保存按钮
+
+## Component Adaptations
+
+### Button Components
+- **Primary Button**: 100% width x 48px
+- **Secondary Button**: 100% width x 44px
+- **Icon Button**: 44px x 44px
+- **Touch Target**: 最小44px
+
+### Form Components
+- **Input Height**: 48px
+- **Dropdown Height**: 48px
+- **Checkbox Size**: 24px x 24px
+- **Radio Size**: 24px x 24px
+
+### Navigation Components
+- **Tab Height**: 48px
+- **Menu Item**: 56px height
+- **Breadcrumb**: 40px height
+- **Icon Size**: 24px x 24px
+
+### Card Components
+- **Border Radius**: 12px
+- **Padding**: 16px
+- **Shadow**: 0 2px 8px #00000010
+- **Hover Effect**: 轻微上移 + 阴影加深
+
+## Touch Interaction
+
+### Touch Targets
+- **Minimum Size**: 44px x 44px
+- **Spacing**: 8px between targets
+- **Visual Feedback**: 按下状态变化
+
+### Gesture Support
+- **Swipe**: 列表项滑动操作
+- **Pull to Refresh**: 列表页面
+- **Long Press**: 上下文菜单
+- **Double Tap**: 快速操作
+
+### Scroll Behavior
+- **Smooth Scrolling**: 60fps
+- **Infinite Scroll**: 长列表
+- **Sticky Headers**: 页面头部
+- **Bounce Effect**: iOS风格
+
+## Typography Scale
+
+### Font Sizes
+- **H1**: 24px (页面标题)
+- **H2**: 20px (区块标题)
+- **H3**: 18px (卡片标题)
+- **Body**: 16px (正文)
+- **Small**: 14px (辅助文字)
+- **Caption**: 12px (标签)
+
+### Line Heights
+- **Tight**: 1.2 (标题)
+- **Normal**: 1.4 (正文)
+- **Relaxed**: 1.6 (长文本)
+
+### Font Weights
+- **Light**: 300
+- **Regular**: 400
+- **Medium**: 500
+- **Semibold**: 600
+- **Bold**: 700
+
+## Color Adaptations
+
+### Background Colors
+- **Primary**: #FFFFFF
+- **Secondary**: #F9FAFB
+- **Tertiary**: #F3F4F6
+- **Overlay**: #00000080
+
+### Text Colors
+- **Primary**: #111827
+- **Secondary**: #6B7280
+- **Tertiary**: #9CA3AF
+- **Inverse**: #FFFFFF
+
+### Interactive Colors
+- **Primary**: #3B82F6
+- **Success**: #10B981
+- **Warning**: #F59E0B
+- **Error**: #EF4444
+
+## Animation Guidelines
+
+### Transition Timing
+- **Fast**: 150ms (按钮点击)
+- **Normal**: 250ms (页面切换)
+- **Slow**: 350ms (复杂动画)
+
+### Easing Functions
+- **Ease Out**: 快速开始, 缓慢结束
+- **Ease In Out**: 平滑过渡
+- **Bounce**: 弹性效果 (通知)
+
+### Animation Types
+- **Fade**: 透明度变化
+- **Slide**: 位置移动
+- **Scale**: 大小变化
+- **Rotate**: 旋转效果
+
+## Performance Considerations
+
+### Rendering Optimization
+- **Virtual Scrolling**: 长列表
+- **Lazy Loading**: 图片和组件
+- **Debouncing**: 搜索输入
+- **Throttling**: 滚动事件
+
+### Touch Performance
+- **60fps**: 所有动画
+- **Immediate Feedback**: 按钮点击
+- **Smooth Scrolling**: 列表滚动
+- **Reduced Motion**: 可访问性选项
+
+### Memory Management
+- **Component Recycling**: 列表项
+- **Image Optimization**: WebP格式
+- **Code Splitting**: 按页面加载
+- **Caching**: 静态资源缓存
+
+## Accessibility Features
+
+### Touch Accessibility
+- **Large Touch Targets**: 最小44px
+- **Clear Visual Feedback**: 按下状态
+- **Gesture Alternatives**: 按钮替代手势
+- **Voice Control**: 语音操作支持
+
+### Screen Reader Support
+- **Semantic HTML**: 正确的标签结构
+- **ARIA Labels**: 描述性标签
+- **Focus Management**: 清晰的焦点顺序
+- **Status Announcements**: 状态变化通知
+
+### Visual Accessibility
+- **High Contrast**: 颜色对比度 > 4.5:1
+- **Large Text**: 支持动态字体大小
+- **Reduced Motion**: 减少动画选项
+- **Color Independence**: 不依赖颜色传达信息
+
+## Testing Considerations
+
+### Device Testing
+- **iPhone**: 375x667, 390x844, 414x896
+- **Android**: 360x640, 384x640, 412x915
+- **Small Tablets**: 768x1024
+- **Hybrid Devices**: 可转换设备
+
+### Orientation Testing
+- **Portrait**: 纵向模式
+- **Landscape**: 横向模式
+- **Rotation**: 动态旋转
+- **Split Screen**: 分屏模式
+
+### Interaction Testing
+- **Touch Accuracy**: 触摸精度测试
+- **Gesture Recognition**: 手势识别
+- **Keyboard Navigation**: 键盘导航
+- **Voice Control**: 语音控制测试
+
+## Development Guidelines
+
+### CSS Implementation
+```css
+/* Mobile Breakpoint */
+@media (max-width: 767px) {
+  .container {
+    margin: 0 16px;
+  }
+  
+  .mobile-full {
+    width: 100%;
+  }
+  
+  .mobile-stack {
+    flex-direction: column;
+  }
+  
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+```
+
+### Component Props
+```typescript
+interface MobileProps {
+  orientation: 'portrait' | 'landscape';
+  touchEnabled: boolean;
+  reducedMotion: boolean;
+  highContrast: boolean;
+}
+```
+
+### Performance Monitoring
+- **Core Web Vitals**: LCP, FID, CLS
+- **Touch Response Time**: < 100ms
+- **Animation Frame Rate**: 60fps
+- **Memory Usage**: < 50MB
+
+## Mobile-Specific Features
+
+### Bottom Navigation
+- **Position**: 固定在底部
+- **Height**: 64px
+- **Items**: 4-5个主要功能
+- **Active State**: 图标 + 文字高亮
+
+### Floating Action Button
+- **Position**: 右下角
+- **Size**: 56px 圆形
+- **Icon**: 主要操作图标
+- **Shadow**: 明显阴影效果
+
+### Pull to Refresh
+- **Indicator**: 下拉刷新指示器
+- **Animation**: 旋转加载动画
+- **Threshold**: 80px触发距离
+
+### Swipe Actions
+- **Left Swipe**: 删除操作
+- **Right Swipe**: 编辑操作
+- **Visual Feedback**: 操作按钮显示
+
+## Offline Support
+
+### Offline Indicator
+- **Banner**: 顶部离线提示
+- **Icon**: 网络状态图标
+- **Message**: 离线状态说明
+
+### Cached Data
+- **Local Storage**: 重要数据缓存
+- **Sync Queue**: 离线操作队列
+- **Background Sync**: 网络恢复时同步
+
+### Offline Actions
+- **Read Operations**: 正常显示缓存数据
+- **Write Operations**: 加入同步队列
+- **Error Handling**: 友好的错误提示
+
+## Security Features
+
+### Biometric Authentication
+- **Touch ID**: iOS指纹识别
+- **Face ID**: iOS面容识别
+- **Android Biometric**: Android生物识别
+
+### Secure Storage
+- **Keychain**: iOS安全存储
+- **Keystore**: Android安全存储
+- **Encryption**: 敏感数据加密
+
+### Network Security
+- **HTTPS**: 强制安全连接
+- **Certificate Pinning**: 证书固定
+- **VPN Support**: VPN连接支持 

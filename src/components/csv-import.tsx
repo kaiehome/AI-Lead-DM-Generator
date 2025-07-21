@@ -40,8 +40,8 @@ Jane Smith,Sales Director,Startup Inc,https://linkedin.com/in/janesmith,Startup,
 export function CSVImport({ onImportComplete, onClose }: CSVImportProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
-  const [csvData, setCsvData] = useState<any[]>([])
-  const [previewData, setPreviewData] = useState<any[]>([])
+  const [csvData, setCsvData] = useState<Record<string, string>[]>([])
+  const [previewData, setPreviewData] = useState<Record<string, string>[]>([])
   const [fieldMapping, setFieldMapping] = useState<Record<string, string>>({})
   const [importResult, setImportResult] = useState<ImportResult | null>(null)
   const [progress, setProgress] = useState(0)
@@ -73,7 +73,7 @@ export function CSVImport({ onImportComplete, onClose }: CSVImportProps) {
           return
         }
 
-        const data = results.data as any[]
+        const data = results.data as Record<string, string>[]
         setCsvData(data)
         setPreviewData(data.slice(0, 5)) // 只显示前5行预览
 
@@ -127,7 +127,7 @@ export function CSVImport({ onImportComplete, onClose }: CSVImportProps) {
     try {
       // 转换数据格式
       const transformedData = csvData.map(row => {
-        const transformed: any = {}
+        const transformed: Record<string, string> = {}
         Object.keys(fieldMapping).forEach(csvField => {
           const targetField = fieldMapping[csvField]
           if (targetField) {

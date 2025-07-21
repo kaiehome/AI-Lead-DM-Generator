@@ -26,12 +26,9 @@ import {
   Target,
   MapPin,
   Mail,
-  Clock,
   TrendingUp,
   FilterX,
-  RefreshCw,
-  Download,
-  Upload
+  Download
 } from 'lucide-react'
 
 interface SearchFilterProps {
@@ -40,7 +37,6 @@ interface SearchFilterProps {
   onSort: (sortBy: string, sortOrder: 'asc' | 'desc') => void
   onClear: () => void
   onExport?: () => void
-  onImport?: () => void
   isLoading?: boolean
 }
 
@@ -70,7 +66,6 @@ export function SearchFilter({
   onSort, 
   onClear, 
   onExport,
-  onImport,
   isLoading = false 
 }: SearchFilterProps) {
   const [searchQuery, setSearchQuery] = useState('')

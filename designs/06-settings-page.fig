@@ -1,0 +1,296 @@
+# Figma Design: Settings Page
+# File: 06-settings-page.fig
+# Created: 2024-01-21
+# Status: Complete
+
+## Page Layout: Settings Page
+
+### Header Section
+- **Page Title**: "设置" / "Settings"
+- **Breadcrumb**: 首页 > 设置
+- **Save Button**: 保存所有设置 (Primary)
+
+### Settings Navigation
+- **Sidebar Navigation**:
+  - 个人资料 (Profile)
+  - 消息偏好 (Message Preferences)
+  - API配置 (API Configuration)
+  - 通知设置 (Notifications)
+  - 数据管理 (Data Management)
+  - 安全设置 (Security)
+  - 关于 (About)
+
+### Main Content Area
+
+#### 1. Profile Settings Section
+- **Profile Picture**: 圆形头像上传区域
+- **Personal Information**:
+  - 姓名输入框
+  - 邮箱输入框 (只读)
+  - 公司名称输入框
+  - 职位输入框
+- **Contact Information**:
+  - 电话号码输入框
+  - LinkedIn个人资料链接
+
+#### 2. Message Preferences Section
+- **Default Message Style**:
+  - 风格选择: 专业/友好/正式/创意
+  - 目标选择: 建立联系/销售/招聘/合作
+  - 长度选择: 简短/标准/详细
+- **Message Templates**:
+  - 自定义模板管理
+  - 模板名称和内容编辑
+  - 添加/删除模板按钮
+- **Auto-save Settings**:
+  - 自动保存开关
+  - 保存频率选择
+
+#### 3. API Configuration Section
+- **OpenAI Settings**:
+  - API密钥输入框 (密码类型)
+  - 模型选择: GPT-3.5/GPT-4
+  - 最大令牌数设置
+  - 温度参数设置 (0.1-1.0)
+- **Supabase Settings**:
+  - 项目URL显示 (只读)
+  - API密钥显示 (只读)
+  - 连接状态指示器
+- **Rate Limiting**:
+  - 请求频率限制设置
+  - 错误重试次数设置
+
+#### 4. Notification Settings Section
+- **Email Notifications**:
+  - 新消息生成通知
+  - 客户回复通知
+  - 系统更新通知
+  - 每周报告邮件
+- **In-app Notifications**:
+  - 实时通知开关
+  - 通知声音设置
+  - 桌面通知权限
+- **Notification Schedule**:
+  - 工作时间设置
+  - 免打扰时间设置
+
+#### 5. Data Management Section
+- **Export Options**:
+  - 导出格式选择: CSV/Excel/JSON
+  - 数据范围选择: 全部/选定时间/选定客户
+  - 导出按钮
+- **Import Options**:
+  - 文件上传区域
+  - 支持格式说明
+  - 导入预览
+- **Data Cleanup**:
+  - 删除过期数据选项
+  - 数据备份设置
+  - 数据恢复选项
+
+#### 6. Security Settings Section
+- **Password Management**:
+  - 当前密码输入
+  - 新密码输入
+  - 确认新密码
+  - 密码强度指示器
+- **Two-Factor Authentication**:
+  - 2FA开关
+  - 设置向导
+  - 备用代码管理
+- **Session Management**:
+  - 当前会话列表
+  - 设备信息显示
+  - 登出其他设备按钮
+
+#### 7. About Section
+- **App Information**:
+  - 版本号显示
+  - 构建日期
+  - 许可证信息
+- **Support Links**:
+  - 帮助文档链接
+  - 联系支持
+  - 反馈提交
+- **Legal Information**:
+  - 隐私政策
+  - 服务条款
+  - 数据使用说明
+
+## Component Specifications
+
+### Settings Card
+- **Background**: 白色 #FFFFFF
+- **Border**: 1px #E5E7EB
+- **Border Radius**: 12px
+- **Padding**: 24px
+- **Shadow**: 0 1px 3px #00000010
+- **Margin Bottom**: 24px
+
+### Form Input
+- **Height**: 44px
+- **Border**: 1px #D1D5DB
+- **Border Radius**: 8px
+- **Padding**: 12px 16px
+- **Focus Border**: #3B82F6
+- **Focus Shadow**: 0 0 0 3px #3B82F620
+
+### Toggle Switch
+- **Width**: 48px
+- **Height**: 24px
+- **Background**: #E5E7EB (off) / #3B82F6 (on)
+- **Border Radius**: 12px
+- **Thumb**: 20px 圆形, 白色
+
+### Dropdown Select
+- **Height**: 44px
+- **Border**: 1px #D1D5DB
+- **Border Radius**: 8px
+- **Background**: 白色
+- **Arrow Icon**: 右侧, #6B7280
+
+### Button Variants
+- **Primary**: 蓝色背景 #3B82F6, 白色文字
+- **Secondary**: 白色背景, 蓝色边框 #3B82F6
+- **Danger**: 红色背景 #EF4444, 白色文字
+- **Ghost**: 透明背景, 灰色文字 #6B7280
+
+## Responsive Design
+
+### Desktop (1200px+)
+- 侧边栏导航 + 主内容区
+- 2列表单布局
+- 完整功能显示
+
+### Tablet (768-1024px)
+- 顶部导航标签
+- 单列表单布局
+- 折叠部分高级选项
+
+### Mobile (375-768px)
+- 全屏导航
+- 单列布局
+- 简化表单控件
+
+## Interaction States
+
+### Form Input States
+- **Default**: 灰色边框 #D1D5DB
+- **Focus**: 蓝色边框 #3B82F6 + 阴影
+- **Error**: 红色边框 #EF4444
+- **Success**: 绿色边框 #10B981
+- **Disabled**: 灰色背景 #F9FAFB
+
+### Button States
+- **Default**: 正常颜色
+- **Hover**: 颜色加深 10%
+- **Active**: 颜色加深 20%
+- **Disabled**: 透明度 50%
+
+### Toggle Switch States
+- **Off**: 灰色背景
+- **On**: 蓝色背景
+- **Hover**: 轻微缩放
+- **Disabled**: 透明度 50%
+
+## Accessibility Features
+
+### Keyboard Navigation
+- Tab键在表单控件间导航
+- Enter键激活按钮
+- Space键切换开关
+
+### Screen Reader Support
+- 所有输入框包含标签
+- 按钮包含描述性文本
+- 状态变化有语音提示
+
+### Color Contrast
+- 所有文字满足WCAG AA标准
+- 错误状态使用图标 + 颜色
+- 成功状态使用图标 + 颜色
+
+## Animation Effects
+
+### Page Transitions
+- 设置项切换: 0.3s ease-out
+- 表单展开/折叠: 0.2s ease-in-out
+
+### Form Interactions
+- 输入框聚焦: 0.2s ease-out
+- 按钮点击: 0.1s ease-out
+- 开关切换: 0.2s ease-in-out
+
+### Loading States
+- 保存按钮加载动画
+- 表单验证反馈
+- 数据加载骨架屏
+
+## Data Validation
+
+### Form Validation Rules
+- **Email**: 有效邮箱格式
+- **Password**: 最少8字符, 包含大小写字母和数字
+- **Phone**: 有效电话号码格式
+- **API Key**: 正确格式验证
+
+### Real-time Validation
+- 输入时实时验证
+- 错误消息即时显示
+- 成功状态即时反馈
+
+### Save Validation
+- 必填字段检查
+- 数据格式验证
+- 冲突检测
+
+## Error Handling
+
+### Network Errors
+- API连接失败提示
+- 重试机制
+- 离线模式支持
+
+### Validation Errors
+- 字段级错误提示
+- 表单级错误汇总
+- 错误定位高亮
+
+### Permission Errors
+- 权限不足提示
+- 权限申请引导
+- 替代方案提供
+
+## Performance Considerations
+
+### Lazy Loading
+- 设置项按需加载
+- 图片懒加载
+- 表单验证延迟
+
+### Caching
+- 用户偏好缓存
+- 设置项状态缓存
+- 表单数据自动保存
+
+### Optimization
+- 防抖输入验证
+- 批量设置保存
+- 异步数据加载
+
+## Security Features
+
+### Data Protection
+- 敏感信息加密存储
+- API密钥安全处理
+- 会话超时管理
+
+### Input Sanitization
+- XSS防护
+- SQL注入防护
+- 文件上传验证
+
+### Audit Trail
+- 设置变更记录
+- 登录历史记录
+- 操作日志保存 

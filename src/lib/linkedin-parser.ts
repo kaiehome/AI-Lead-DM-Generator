@@ -12,6 +12,7 @@ export interface LinkedInProfile {
   company_size?: string
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function parseLinkedInProfile(_linkedinUrl: string): Promise<LinkedInProfile | null> {
   try {
     // This should implement actual LinkedIn profile parsing logic

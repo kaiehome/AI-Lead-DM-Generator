@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+
 import { 
   Plus, 
   Upload, 
@@ -22,6 +22,7 @@ import { CSVImport } from './csv-import'
 import { exportLeadsToCSV, exportMessagesToCSV, formatLeadsForExport, formatMessagesForExport } from '@/lib/csv-export'
 import { useToast } from '@/hooks/use-toast'
 import { Lead } from '@/lib/supabase'
+import { Message } from '@/lib/supabase'
 
 interface QuickActionsProps {
   onAddLead: () => void
@@ -31,9 +32,8 @@ interface QuickActionsProps {
   totalLeads: number
   totalMessages: number
   leads: Lead[]
-  messages: any[]
+  messages: Message[]
   onRefresh: () => void
-  isLoading?: boolean
 }
 
 export function QuickActions({
@@ -45,8 +45,7 @@ export function QuickActions({
   totalMessages,
   leads,
   messages,
-  onRefresh,
-  isLoading = false
+  onRefresh
 }: QuickActionsProps) {
   const [isExporting, setIsExporting] = useState(false)
   const [showCSVImport, setShowCSVImport] = useState(false)

@@ -16,17 +16,13 @@ import {
   Target,
   Clock,
   BarChart3,
-  PieChart,
-  LineChart,
-  Calendar,
+
   Eye,
   Download,
   RefreshCw,
   Zap,
   Star,
-  AlertCircle,
-  DollarSign,
-  Globe,
+
   Building,
   MapPin
 } from 'lucide-react'
@@ -146,7 +142,6 @@ export function StatsCards({
   isLoading = false 
 }: StatsCardsProps) {
   const [activeTab, setActiveTab] = useState('overview')
-  const [selectedMetric, setSelectedMetric] = useState<string | null>(null)
 
   const stats = [
     {
@@ -214,7 +209,6 @@ export function StatsCards({
   ]
 
   const handleMetricClick = (metric: string) => {
-    setSelectedMetric(metric)
     // 这里可以打开详细分析模态框
     console.log(`查看 ${metric} 详细数据`)
   }
@@ -391,7 +385,7 @@ export function StatsCards({
                 <div className="space-y-4">
                   <h3 className="text-sm font-medium text-muted-foreground">热门行业</h3>
                   <div className="space-y-3">
-                    {topIndustries.slice(0, 5).map((industry, index) => (
+                    {topIndustries.slice(0, 5).map((industry, _index) => (
                       <div key={industry.name} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                         <div className="flex items-center space-x-3">
                           <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
@@ -444,8 +438,8 @@ export function StatsCards({
               <div className="space-y-3">
                 <h3 className="text-sm font-medium text-muted-foreground">最近活动</h3>
                 {recentActivity.length > 0 ? (
-                  recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  recentActivity.map((activity, _index) => (
+                    <div key={_index} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                       <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                         <Activity className="h-4 w-4 text-blue-600" />
                       </div>

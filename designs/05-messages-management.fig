@@ -1,0 +1,211 @@
+# Figma Design: Messages Management Page
+# File: 05-messages-management.fig
+# Created: 2024-01-21
+# Status: Complete
+
+## Page Layout: Messages Management
+
+### Header Section
+- **Page Title**: "消息管理" / "Messages Management"
+- **Breadcrumb**: 首页 > 消息管理
+- **Actions**: 
+  - 新建消息按钮 (Primary)
+  - 批量操作下拉菜单
+  - 导出按钮
+
+### Search and Filter Bar
+- **Search Input**: 搜索消息内容或关联客户
+- **Filter Dropdowns**:
+  - 状态筛选: 草稿/已发送/已回复
+  - 时间筛选: 今天/本周/本月/全部
+  - 客户筛选: 按客户名称筛选
+- **Sort Options**: 按时间/状态/客户排序
+
+### Messages List View
+- **Table Header**:
+  - 复选框 (全选)
+  - 消息内容预览
+  - 关联客户
+  - 状态标签
+  - 创建时间
+  - 操作按钮
+
+- **Message Rows**:
+  - 消息内容预览 (最多100字符)
+  - 客户信息 (姓名 + 公司)
+  - 状态标签 (草稿/已发送/已回复)
+  - 时间戳
+  - 操作按钮 (编辑/删除/复制/发送)
+
+### Message Detail Modal
+- **Modal Header**: 消息详情
+- **Content Area**:
+  - 消息完整内容
+  - 客户信息卡片
+  - 生成参数 (风格/目标/长度)
+  - 创建和修改时间
+- **Actions**: 编辑/复制/删除/关闭
+
+### Empty State
+- **Illustration**: 空消息图标
+- **Title**: "暂无消息"
+- **Description**: "开始创建您的第一条个性化消息"
+- **Action Button**: "创建消息"
+
+### Pagination
+- **Page Info**: 显示 1-10 of 50 条消息
+- **Navigation**: 上一页/下一页按钮
+- **Page Numbers**: 1, 2, 3, 4, 5...
+
+## Component Specifications
+
+### Message Status Tags
+- **Draft**: 灰色背景 #6B7280, 白色文字
+- **Sent**: 蓝色背景 #3B82F6, 白色文字  
+- **Replied**: 绿色背景 #10B981, 白色文字
+
+### Message Preview Card
+- **Background**: 白色 #FFFFFF
+- **Border**: 1px #E5E7EB
+- **Padding**: 16px
+- **Border Radius**: 8px
+- **Hover Effect**: 阴影 #00000010
+
+### Search Input
+- **Width**: 300px
+- **Height**: 40px
+- **Border**: 1px #D1D5DB
+- **Border Radius**: 6px
+- **Placeholder**: "搜索消息内容..."
+
+### Filter Dropdown
+- **Width**: 150px
+- **Height**: 40px
+- **Background**: 白色
+- **Border**: 1px #D1D5DB
+- **Border Radius**: 6px
+
+## Responsive Considerations
+
+### Desktop (1200px+)
+- 3列布局: 搜索栏 + 筛选器 + 操作按钮
+- 表格完整显示所有列
+- 侧边栏显示消息详情
+
+### Tablet (768-1024px)
+- 2列布局: 搜索筛选 + 操作按钮
+- 表格隐藏部分列
+- 模态框显示消息详情
+
+### Mobile (375-768px)
+- 单列布局
+- 卡片式消息列表
+- 全屏模态框
+
+## Interaction States
+
+### Message Row Hover
+- 背景色变化: #F9FAFB
+- 操作按钮显示
+
+### Status Tag States
+- 可点击状态标签切换筛选
+- 悬停效果显示状态说明
+
+### Search Input Focus
+- 边框颜色: #3B82F6
+- 阴影效果
+
+### Button States
+- **Primary**: 默认/悬停/点击/禁用
+- **Secondary**: 默认/悬停/点击/禁用
+
+## Accessibility Features
+
+### Keyboard Navigation
+- Tab键在消息行间导航
+- Enter键打开消息详情
+- Space键选择消息
+
+### Screen Reader Support
+- 状态标签包含ARIA标签
+- 表格包含适当的表头关联
+- 操作按钮包含描述性文本
+
+### Color Contrast
+- 所有文字满足WCAG AA标准
+- 状态标签颜色对比度 > 4.5:1
+
+## Animation Effects
+
+### Message Row Entry
+- 淡入动画: 0.3s ease-out
+- 从下方滑入: 20px
+
+### Status Change
+- 颜色过渡: 0.2s ease-in-out
+- 轻微缩放效果
+
+### Modal Open/Close
+- 淡入淡出: 0.3s ease-out
+- 缩放效果: 0.95 -> 1.0
+
+## Data Integration
+
+### Message Data Structure
+```typescript
+interface Message {
+  id: string;
+  content: string;
+  leadId: string;
+  leadName: string;
+  leadCompany: string;
+  status: 'draft' | 'sent' | 'replied';
+  style: string;
+  target: string;
+  length: string;
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+### API Endpoints
+- GET /api/messages - 获取消息列表
+- GET /api/messages/[id] - 获取消息详情
+- PUT /api/messages/[id] - 更新消息
+- DELETE /api/messages/[id] - 删除消息
+- POST /api/messages/bulk - 批量操作
+
+## Performance Considerations
+
+### Virtual Scrolling
+- 大量消息时使用虚拟滚动
+- 每页显示20条消息
+- 懒加载消息内容
+
+### Search Optimization
+- 防抖搜索: 300ms延迟
+- 搜索结果缓存
+- 索引优化
+
+### Image Optimization
+- 客户头像懒加载
+- WebP格式支持
+- 响应式图片尺寸
+
+## Error Handling
+
+### Network Errors
+- 重试机制
+- 离线状态提示
+- 错误消息显示
+
+### Validation Errors
+- 表单验证提示
+- 实时错误反馈
+- 错误状态样式
+
+### Empty States
+- 无搜索结果提示
+- 网络错误状态
+- 加载失败状态 

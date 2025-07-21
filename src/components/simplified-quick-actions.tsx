@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
+
 import { 
   Collapsible,
   CollapsibleContent,
@@ -19,7 +19,7 @@ import {
   Settings,
   BarChart3,
   Zap,
-  Target,
+
   Clock,
   TrendingUp,
   ChevronDown,
@@ -28,7 +28,7 @@ import {
 import { CSVImport } from './csv-import'
 import { exportLeadsToCSV, exportMessagesToCSV, formatLeadsForExport, formatMessagesForExport } from '@/lib/csv-export'
 import { useToast } from '@/hooks/use-toast'
-import { Lead } from '@/lib/supabase'
+import { Lead, Message } from '@/lib/supabase'
 
 interface SimplifiedQuickActionsProps {
   onAddLead: () => void
@@ -38,9 +38,9 @@ interface SimplifiedQuickActionsProps {
   totalLeads: number
   totalMessages: number
   leads: Lead[]
-  messages: { status: string }[]
+  messages: Message[]
   onRefresh: () => void
-  isLoading?: boolean
+
 }
 
 export function SimplifiedQuickActions({
@@ -53,7 +53,6 @@ export function SimplifiedQuickActions({
   leads,
   messages,
   onRefresh,
-  isLoading = false
 }: SimplifiedQuickActionsProps) {
   const [isExporting, setIsExporting] = useState(false)
   const [showCSVImport, setShowCSVImport] = useState(false)

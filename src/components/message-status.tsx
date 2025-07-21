@@ -44,9 +44,6 @@ export function MessageStatus({
   const [isUpdating, setIsUpdating] = useState(false)
   const { toast } = useToast()
 
-  const currentStatusOption = STATUS_OPTIONS.find(option => option.value === currentStatus)
-  const CurrentStatusIcon = currentStatusOption?.icon || Edit
-
   const handleStatusChange = async (newStatus: string) => {
     if (newStatus === currentStatus) return
 

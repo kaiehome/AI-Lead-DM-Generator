@@ -8,13 +8,12 @@ import { MessageSquare, Copy, ExternalLink, Calendar } from 'lucide-react'
 
 interface SimplifiedMessagesTableProps {
   messages: (Message & { lead?: { name: string; linkedin_url?: string } })[]
-  onMessageSelect?: (message: Message) => void
+
   onMessageStatusChange?: (messageId: string, status: string) => void
 }
 
 export function SimplifiedMessagesTable({ 
   messages, 
-  onMessageSelect,
   onMessageStatusChange 
 }: SimplifiedMessagesTableProps) {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)

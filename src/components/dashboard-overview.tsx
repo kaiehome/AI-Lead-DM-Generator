@@ -2,24 +2,19 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { 
   TrendingUp, 
-  TrendingDown, 
-  Users, 
+   
   MessageSquare, 
   Target, 
-  Clock,
+    Clock,
   BarChart3,
-  PieChart,
   Activity,
-  Calendar,
   ArrowUpRight,
   ArrowDownRight,
-  Eye,
-  MousePointer,
   Heart
 } from 'lucide-react'
 
@@ -28,7 +23,7 @@ interface DashboardOverviewProps {
   totalMessages: number
   approvedMessages: number
   sentMessages: number
-  isLoading?: boolean
+
 }
 
 export function DashboardOverview({ 
@@ -36,7 +31,6 @@ export function DashboardOverview({
   totalMessages, 
   approvedMessages, 
   sentMessages,
-  isLoading = false 
 }: DashboardOverviewProps) {
   const [selectedPeriod, setSelectedPeriod] = useState('7d')
 

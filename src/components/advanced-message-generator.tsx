@@ -45,7 +45,7 @@ interface AdvancedMessageGeneratorProps {
     industry?: string
     company_size?: string
   }
-  onMessageGenerated: (message: string) => void
+  onMessageGenerated?: (message: string) => void
 }
 
 const MESSAGE_STYLES: { value: MessageStyle; label: string; description: string }[] = [
@@ -121,7 +121,7 @@ export function AdvancedMessageGenerator({ lead, onMessageGenerated }: AdvancedM
       const result = await generateMessage.mutateAsync(params)
       const message = result.message
       setGeneratedMessage(message)
-      onMessageGenerated(message)
+      onMessageGenerated?.(message)
     } catch (error) {
       console.error('Failed to generate message:', error)
     }
@@ -465,7 +465,7 @@ export function AdvancedMessageGenerator({ lead, onMessageGenerated }: AdvancedM
               value={generatedMessage}
               onChange={(e) => {
                 setGeneratedMessage(e.target.value)
-                onMessageGenerated(e.target.value)
+                onMessageGenerated?.(e.target.value)
               }}
               placeholder="AI will generate personalized messages here..."
               className={`min-h-[120px] resize-none border-0 bg-white ${

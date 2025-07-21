@@ -15,7 +15,7 @@ import {
   ChevronRight,
   Upload,
   Download,
-  Filter,
+
   Users,
   MessageSquare,
   Trash2,
@@ -26,11 +26,11 @@ import {
 import { CSVImport } from './csv-import'
 import { exportLeadsToCSV, exportMessagesToCSV, formatLeadsForExport, formatMessagesForExport } from '@/lib/csv-export'
 import { useToast } from '@/hooks/use-toast'
-import { Lead } from '@/lib/supabase'
+import { Lead, Message } from '@/lib/supabase'
 
 interface AdvancedFeaturesProps {
   leads: Lead[]
-  messages: { status: string }[]
+  messages: Message[]
   onRefresh: () => void
   onBulkDelete: (ids: string[]) => Promise<void>
   onBulkGenerateMessages: (leads: Lead[]) => Promise<void>
