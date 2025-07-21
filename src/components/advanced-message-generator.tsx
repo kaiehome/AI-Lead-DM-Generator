@@ -241,7 +241,7 @@ export function AdvancedMessageGenerator({ lead, onMessageGenerated }: AdvancedM
                 Message Style
               </Label>
               <Select value={messageStyle} onValueChange={(value: MessageStyle) => setMessageStyle(value)}>
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-8 text-xs min-w-[140px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -263,7 +263,7 @@ export function AdvancedMessageGenerator({ lead, onMessageGenerated }: AdvancedM
                 Message Target
               </Label>
               <Select value={messageTarget} onValueChange={(value: MessageTarget) => setMessageTarget(value)}>
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-8 text-xs min-w-[140px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -285,7 +285,7 @@ export function AdvancedMessageGenerator({ lead, onMessageGenerated }: AdvancedM
                 Message Length
               </Label>
               <Select value={messageLength} onValueChange={(value: MessageLength) => setMessageLength(value)}>
-                <SelectTrigger className="h-8 text-xs">
+                <SelectTrigger className="h-8 text-xs min-w-[140px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>

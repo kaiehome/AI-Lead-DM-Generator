@@ -7,57 +7,39 @@ import { useLeads } from '@/hooks/use-leads';
 import { useGenerateMessage } from '@/hooks/use-message-generation';
 import { useCreateMessage } from '@/hooks/use-messages';
 import { Lead, CreateLeadData } from '@/lib/supabase';
-import { AdvancedMessageGenerator } from '@/components/advanced-message-generator';
-import { MessageSettings } from '@/components/message-settings';
-import { LinkedInAnalyzer } from '@/components/linkedin-analyzer';
-import { TemplateSelector } from '@/components/template-selector';
-import { LeadForm } from '@/components/lead-form';
-import { MessageHistory } from '@/components/message-history';
-import { UserPreferences, MessageTemplate } from '@/types/message';
-import { MessageTemplate as TemplateType } from '@/lib/message-templates';
-import { LinkedInProfile } from '@/lib/linkedin-parser';
-import { MessageSquare, Users, Plus, Sparkles, Target, TrendingUp, Building2, UserPlus } from 'lucide-react';
+import { SimplifiedLeadForm } from '@/components/simplified-lead-form';
+import { SimplifiedLeadsTable } from '@/components/simplified-leads-table';
+import { exportLeadsToCSV, formatLeadsForExport } from '@/lib/csv-export';
+import { MessageSquare, Users, Plus, Sparkles, Target, TrendingUp, UserPlus, MessageCircle, Copy, Upload } from 'lucide-react';
 
 export default function Home() {
   // State management
-  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
   const [generatedMessage, setGeneratedMessage] = useState<string>('');
   const [showLeadForm, setShowLeadForm] = useState<boolean>(false);
   const [isAddingLead, setIsAddingLead] = useState<boolean>(false);
-  const [generatingLeadId, setGeneratingLeadId] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [selectedAction, setSelectedAction] = useState<string>('generate'); // 新增：跟踪选中的操作
+  const [showNoLeadsMessage, setShowNoLeadsMessage] = useState<boolean>(false); // 新增：显示无潜在客户提示
+  const [showMessageGenerator, setShowMessageGenerator] = useState<boolean>(false); // 新增：显示消息生成器
+  const [customContext, setCustomContext] = useState<string>(''); // 新增：自定义上下文
+  const [messageStyle, setMessageStyle] = useState<string>('professional'); // 新增：消息风格
+  const [messageTarget, setMessageTarget] = useState<string>('connection'); // 新增：消息目标
+  const [messageLength, setMessageLength] = useState<string>('standard'); // 新增：消息长度
+  const [includeEmojis, setIncludeEmojis] = useState<boolean>(false); // 新增：是否包含表情
+  const [selectedLeadForMessage, setSelectedLeadForMessage] = useState<Lead | null>(null); // 新增：选中的潜在客户
+  const [isBulkMode, setIsBulkMode] = useState<boolean>(false); // 新增：是否为批量模式
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false); // 新增：显示成功提示
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false); // 新增：显示错误提示
+  const [errorMessage, setErrorMessage] = useState<string>(''); // 新增：错误消息内容
+  // 使用真实的Supabase数据
   const { data: leadsData, isLoading, error, refetch } = useLeads();
+  const leads = leadsData?.leads || [];
   const { mutate: generateMessage } = useGenerateMessage();
   const createMessage = useCreateMessage();
   
   // Refs for auto-scrolling
   const resultRef = useRef<HTMLDivElement>(null);
-  const generatorRef = useRef<HTMLDivElement>(null);
-  
-  // Default user preferences
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
-    default_style: 'professional',
-    default_target: 'connection',
-    preferred_length: 'standard',
-    include_emojis: false,
-    auto_save_templates: true,
-    show_character_count: true
-  });
-
-  // Example templates
-  const [templates, setTemplates] = useState<MessageTemplate[]>([
-    {
-      id: '1',
-      name: 'Technology Industry Connection',
-      content: 'Hi {name}, I noticed your work at {company} and was impressed by your expertise in {role}. Would love to connect and discuss industry trends!',
-      style: 'professional',
-      target: 'connection',
-      industry: 'technology',
-      is_default: true,
-      created_at: new Date().toISOString()
-    }
-  ]);
-
-  const leads = leadsData?.leads || [];
 
   // Auto-scroll to result when message is generated
   useEffect(() => {
@@ -68,18 +50,6 @@ export default function Home() {
       });
     }
   }, [generatedMessage]);
-
-  // Auto-detect and handle Chinese content
-  useEffect(() => {
-    if (leads.length > 0) {
-      const leadsWithChinese = leads.filter((lead: Lead) => lead.role === 'HR总监');
-      if (leadsWithChinese.length > 0) {
-        console.log('Detected Chinese content in leads:', leadsWithChinese);
-        // In a real app, you would update these via API
-        // For now, we'll just log them
-      }
-    }
-  }, [leads]);
 
   const handleAddLead = async (data: CreateLeadData) => {
     setIsAddingLead(true);
@@ -93,10 +63,8 @@ export default function Home() {
       });
 
       if (response.ok) {
-        // Refresh leads data
         await refetch();
         setShowLeadForm(false);
-        // Show success message
         console.log('Lead added successfully');
       } else {
         throw new Error('Failed to add lead');
@@ -108,106 +76,261 @@ export default function Home() {
     }
   };
 
-  // Function to fix Chinese content in leads
-  const fixChineseContent = async () => {
-    try {
-      // Check if there are any leads with Chinese content
-      const leadsWithChinese = leads.filter((lead: Lead) => lead.role === 'HR总监');
-      
-      if (leadsWithChinese.length > 0) {
-        console.log('Found leads with Chinese content, updating...');
-        
-        // For now, just log the issue - in a real app, you would update via API
-        leadsWithChinese.forEach((lead: Lead) => {
-          console.log(`Lead ${lead.id} has Chinese role: ${lead.role}`);
-        });
-        
-        // Refresh leads data
-        await refetch();
-      }
-    } catch (error) {
-      console.error('Error checking Chinese content:', error);
-    }
-  };
-
-  const handleGenerateMessage = async (lead: Lead) => {
-    setSelectedLead(lead);
-    setGeneratedMessage(''); // Clear previous message
-            setGeneratingLeadId(lead.id); // Set current generating lead ID
+  const handleGenerateMessage = async (leadIds: string[]) => {
+    if (leadIds.length === 0) return;
     
-    generateMessage({
-      name: lead.name,
-      company: lead.company,
-      role: lead.role,
-      industry: '',
-      style: 'professional',
-      target: 'connection',
-      length: 'standard',
-      include_emojis: false
-    });
-  };
-
-  const handleTemplateSelected = (template: TemplateType, filledContent: string) => {
-    console.log('Template selected:', template, filledContent);
-  };
-
-  const handleTemplateApplied = (content: string) => {
-    console.log('Template applied:', content);
-  };
-
-  const handleProfileAnalyzed = (profile: LinkedInProfile) => {
-    console.log('LinkedIn analysis:', profile);
-  };
-
-  const handleMessageGenerated = async (message: string) => {
-    setGeneratedMessage(message);
-    setGeneratingLeadId(null); // Clear generation status
-
-    // Save message to database
-    if (selectedLead) {
-      try {
-        await createMessage.mutateAsync({
-          lead_id: selectedLead.id,
-          content: message,
-          status: 'Draft',
-          template_used: 'AI Generated',
-          ai_model: 'GPT-4',
-          character_count: message.length,
-          generated_at: new Date().toISOString()
-        });
-        console.log('Message saved to database');
-      } catch (error) {
-        console.error('Failed to save message:', error);
-      }
+    console.log('🚀 Starting message generation for leads:', leadIds);
+    setIsGenerating(true);
+    setGeneratedMessage('');
+    
+    try {
+      const selectedLeadsData = leads.filter((lead: Lead) => leadIds.includes(lead.id));
+      console.log('📋 Selected leads data:', selectedLeadsData);
+      
+      // Generate message for the first selected lead (for now)
+      const lead = selectedLeadsData[0] as Lead;
+      console.log('🎯 Generating message for lead:', lead);
+      
+      const messageParams = {
+        name: lead.name,
+        company: lead.company,
+        role: lead.role,
+        industry: '',
+        style: 'professional' as const,
+        target: 'connection' as const,
+        length: 'standard' as const,
+        include_emojis: false
+      };
+      
+      console.log('📝 Message parameters:', messageParams);
+      
+      generateMessage(messageParams, {
+        onSuccess: async (result) => {
+          console.log('✅ Message generated successfully:', result);
+          const message = result.message;
+          setGeneratedMessage(message);
+          
+          // Save message to database for each selected lead
+          for (const leadId of leadIds) {
+            try {
+              await createMessage.mutateAsync({
+                lead_id: leadId,
+                content: message,
+                status: 'Draft',
+                template_used: 'AI Generated (Default)',
+                ai_model: 'GPT-4',
+                character_count: message.length,
+                generated_at: new Date().toISOString()
+              });
+              console.log('💾 Message saved for lead:', leadId);
+            } catch (error) {
+              console.error('❌ Failed to save message for lead:', leadId, error);
+            }
+          }
+          
+          // 显示成功提示
+          setShowSuccessMessage(true);
+          setTimeout(() => setShowSuccessMessage(false), 3000);
+          
+          // 自动滚动到生成的消息
+          if (resultRef.current) {
+            resultRef.current.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        },
+        onError: (error) => {
+          console.error('❌ Failed to generate message:', error);
+          // 显示错误提示
+          setErrorMessage(error.message || '生成消息失败，请重试');
+          setShowErrorMessage(true);
+          setTimeout(() => setShowErrorMessage(false), 5000);
+        }
+      });
+    } catch (error) {
+      console.error('❌ Error in handleGenerateMessage:', error);
+      setErrorMessage(error instanceof Error ? error.message : '处理消息生成时出错');
+      setShowErrorMessage(true);
+      setTimeout(() => setShowErrorMessage(false), 5000);
+    } finally {
+      console.log('🏁 Message generation process completed');
+      setIsGenerating(false);
     }
   };
 
-  const handleTemplateSave = (template: Omit<MessageTemplate, 'id' | 'created_at'>) => {
-    const newTemplate: MessageTemplate = {
-      ...template,
-      id: Date.now().toString(),
-      created_at: new Date().toISOString()
-    };
-    setTemplates([...templates, newTemplate]);
+
+
+  const handleExportLeads = () => {
+    setSelectedAction('export-leads');
+    const formattedLeads = formatLeadsForExport(leads);
+    exportLeadsToCSV(formattedLeads);
   };
 
-  const handleTemplateDelete = (templateId: string) => {
-    setTemplates(templates.filter(t => t.id !== templateId));
+  const handleExportMessages = () => {
+    setSelectedAction('export-messages');
+    // This would need to fetch messages data
+    // For now, we'll show a placeholder
+    console.log('Export messages functionality to be implemented');
+  };
+
+  const handleManageLeads = () => {
+    setSelectedAction('manage-leads');
+  };
+
+  // 新增：处理单个消息生成
+  const handleSingleMessageGenerate = () => {
+    setSelectedAction('generate-single');
+    if (selectedLeads.length === 0) {
+      setShowNoLeadsMessage(true);
+      setTimeout(() => setShowNoLeadsMessage(false), 3000);
+      return;
+    }
+    
+    // 设置单个模式
+    setIsBulkMode(false);
+    
+    // 如果只选中一个潜在客户，直接使用它
+    if (selectedLeads.length === 1) {
+      const lead = leads.find((l: Lead) => l.id === selectedLeads[0]);
+      setSelectedLeadForMessage(lead || null);
+      setShowMessageGenerator(true);
+    } else {
+      // 如果选中多个，让用户选择其中一个
+      setShowMessageGenerator(true);
+    }
+  };
+
+  // 新增：处理批量消息生成
+  const handleBulkMessageGenerate = () => {
+    setSelectedAction('generate-bulk');
+    if (selectedLeads.length === 0) {
+      setShowNoLeadsMessage(true);
+      setTimeout(() => setShowNoLeadsMessage(false), 3000);
+      return;
+    }
+    
+    // 设置批量模式并弹出输入框
+    setIsBulkMode(true);
+    setSelectedLeadForMessage(null); // 批量模式下不需要选择单个潜在客户
+    setShowMessageGenerator(true);
+  };
+
+  // 新增：处理自定义消息生成
+  const handleCustomMessageGenerate = async () => {
+    if (isBulkMode) {
+      // 批量模式：为所有选中的潜在客户生成消息
+      if (selectedLeads.length === 0) return;
+      
+      setIsGenerating(true);
+      setGeneratedMessage('');
+      setShowMessageGenerator(false);
+      
+      try {
+        // 为第一个潜在客户生成消息作为模板
+        const firstLead = leads.find((l: Lead) => l.id === selectedLeads[0]);
+        if (!firstLead) return;
+        
+        generateMessage({
+          name: firstLead.name,
+          company: firstLead.company || '',
+          role: firstLead.role,
+          industry: '',
+          style: messageStyle as 'professional' | 'friendly' | 'casual' | 'formal' | 'enthusiastic',
+          target: messageTarget as 'connection' | 'business' | 'recruitment' | 'networking' | 'event' | 'collaboration',
+          length: messageLength as 'short' | 'standard' | 'detailed',
+          include_emojis: includeEmojis,
+          custom_context: customContext
+        }, {
+          onSuccess: async (result) => {
+            const message = result.message;
+            setGeneratedMessage(message);
+            
+            // 为所有选中的潜在客户保存相同的消息
+            for (const leadId of selectedLeads) {
+              try {
+                await createMessage.mutateAsync({
+                  lead_id: leadId,
+                  content: message,
+                  status: 'Draft',
+                  template_used: 'AI Generated (Bulk)',
+                  ai_model: 'GPT-4',
+                  character_count: message.length,
+                  generated_at: new Date().toISOString()
+                });
+              } catch (error) {
+                console.error('Failed to save message for lead:', leadId, error);
+              }
+            }
+          },
+          onError: (error) => {
+            console.error('Failed to generate message:', error);
+          }
+        });
+      } finally {
+        setIsGenerating(false);
+      }
+    } else {
+      // 单个模式：为选中的潜在客户生成消息
+      if (!selectedLeadForMessage) return;
+      
+      setIsGenerating(true);
+      setGeneratedMessage('');
+      setShowMessageGenerator(false);
+      
+      try {
+        generateMessage({
+          name: selectedLeadForMessage.name,
+          company: selectedLeadForMessage.company || '',
+          role: selectedLeadForMessage.role,
+          industry: '',
+          style: messageStyle as 'professional' | 'friendly' | 'casual' | 'formal' | 'enthusiastic',
+          target: messageTarget as 'connection' | 'business' | 'recruitment' | 'networking' | 'event' | 'collaboration',
+          length: messageLength as 'short' | 'standard' | 'detailed',
+          include_emojis: includeEmojis,
+          custom_context: customContext
+        }, {
+          onSuccess: async (result) => {
+            const message = result.message;
+            setGeneratedMessage(message);
+            
+            // 保存消息到数据库
+            try {
+              await createMessage.mutateAsync({
+                lead_id: selectedLeadForMessage.id,
+                content: message,
+                status: 'Draft',
+                template_used: 'AI Generated (Custom)',
+                ai_model: 'GPT-4',
+                character_count: message.length,
+                generated_at: new Date().toISOString()
+              });
+            } catch (error) {
+              console.error('Failed to save message:', error);
+            }
+          },
+          onError: (error) => {
+            console.error('Failed to generate message:', error);
+          }
+        });
+      } finally {
+        setIsGenerating(false);
+      }
+    }
   };
 
   if (isLoading) return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="text-center space-y-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-        <p className="text-blue-600 font-medium">Loading prospect data...</p>
+        <p className="text-blue-600">Loading...</p>
       </div>
     </div>
   );
-  
+
   if (error) return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="text-center space-y-4">
-        <div className="text-red-500 text-6xl">⚠️</div>
         <p className="text-red-600 font-medium">Loading failed: {error.message}</p>
       </div>
     </div>
@@ -216,33 +339,61 @@ export default function Home() {
   return (
     <div className="min-h-screen scroll-smooth">
       {/* Business Style Header */}
-      <div className="business-header py-6 px-6">
-        <div className="container mx-auto text-center space-y-3">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="p-2 bg-white/20 rounded-full">
-              <MessageSquare className="h-6 w-6 text-white" />
+      <div className="business-header py-12 px-6 relative">
+        <div className="container mx-auto text-center space-y-6 relative z-10">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+              <MessageSquare className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold">LinkedIn Smart Message Generator</h1>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+              LinkedIn Smart Message Generator
+            </h1>
           </div>
-          <p className="text-lg text-blue-100 max-w-2xl mx-auto">
-            Generate personalized, professional LinkedIn messages for your prospects using AI technology to enhance business communication
+          <p className="text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
+            Generate personalized, professional LinkedIn messages for your prospects using AI technology
           </p>
-          <div className="flex items-center justify-center gap-4 mt-4">
-            <div className="flex items-center gap-2 text-blue-100">
+          <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
+            <div className="flex items-center gap-3 text-blue-100 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
               <Sparkles className="h-5 w-5" />
-              <span>AI-Powered</span>
+              <span className="font-medium">AI-Powered</span>
             </div>
-            <div className="flex items-center gap-2 text-blue-100">
+            <div className="flex items-center gap-3 text-blue-100 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
               <Target className="h-5 w-5" />
-              <span>Precision Targeting</span>
+              <span className="font-medium">Precision Targeting</span>
             </div>
-            <div className="flex items-center gap-2 text-blue-100">
+            <div className="flex items-center gap-3 text-blue-100 bg-white/10 px-4 py-2 rounded-full backdrop-blur-sm">
               <TrendingUp className="h-5 w-5" />
-              <span>Boost Conversions</span>
+              <span className="font-medium">Boost Conversions</span>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Success Message Toast */}
+      {showSuccessMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-green-500 border border-green-600 rounded-lg p-4 shadow-xl animate-bounce">
+          <div className="flex items-center gap-3 text-white">
+            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+            <div>
+              <div className="font-bold text-lg">✅ Success!</div>
+              <div className="text-sm opacity-90">Message generated and saved</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Message Toast */}
+      {showErrorMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-red-500 border border-red-600 rounded-lg p-4 shadow-xl animate-bounce">
+          <div className="flex items-center gap-3 text-white">
+            <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+            <div>
+              <div className="font-bold text-lg">❌ Error!</div>
+              <div className="text-sm opacity-90">{errorMessage}</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto p-6 space-y-6">
         {/* Lead Input Form Section */}
@@ -274,7 +425,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="space-y-4">
-                <LeadForm 
+                <SimplifiedLeadForm 
                   onSubmit={handleAddLead}
                   loading={isAddingLead}
                 />
@@ -292,132 +443,410 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Prospects List */}
-          <Card className="business-card">
-            <CardHeader className="border-b border-blue-100">
-              <CardTitle className="flex items-center gap-2 text-blue-800">
-                <Users className="h-5 w-5" />
-                Your Prospects ({leads.length})
-              </CardTitle>
-              <CardDescription className="text-blue-600">
-                Select a prospect to start generating personalized messages
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-4">
-              {leads.length === 0 ? (
-                <div className="text-center py-6">
-                  <div className="p-3 bg-blue-50 rounded-full w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                    <Users className="h-6 w-6 text-blue-600" />
+        {/* Quick Actions */}
+        <Card className="business-card">
+          <CardHeader className="border-b border-blue-100">
+            <CardTitle className="flex items-center gap-3 text-blue-800 text-xl">
+              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg text-white">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              Quick Actions
+            </CardTitle>
+            <CardDescription className="text-blue-600 text-base">
+              Generate messages and manage your data efficiently
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <Button
+                onClick={handleSingleMessageGenerate}
+                disabled={isGenerating}
+                className={`h-auto p-8 flex flex-col items-center space-y-4 group transition-all duration-300 ${
+                  selectedAction === 'generate-single'
+                    ? 'business-button shadow-xl'
+                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 hover:shadow-lg'
+                }`}
+              >
+                {isGenerating ? (
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+                ) : (
+                  <div className={`p-4 rounded-full group-hover:scale-110 transition-transform duration-300 ${
+                    selectedAction === 'generate-single'
+                      ? 'bg-white/20'
+                      : 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
+                  }`}>
+                    <MessageSquare className="h-10 w-10" />
                   </div>
-                  <h3 className="text-base font-semibold text-blue-900 mb-2">No Prospects Yet</h3>
-                  <p className="text-blue-600 mb-4">Add your first prospect to get started</p>
-                  <Button 
-                    onClick={() => setShowLeadForm(true)}
-                    className="business-button"
+                )}
+                <span className="font-bold text-xl">Generate Message</span>
+                <span className={`text-sm px-4 py-2 rounded-full font-medium ${
+                  selectedAction === 'generate-single'
+                    ? 'opacity-90 bg-white/20'
+                    : 'opacity-70 bg-blue-50'
+                }`}>
+                  Single lead
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleBulkMessageGenerate}
+                disabled={isGenerating}
+                className={`h-auto p-8 flex flex-col items-center space-y-4 group transition-all duration-300 ${
+                  selectedAction === 'generate-bulk'
+                    ? 'business-button shadow-xl'
+                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 hover:shadow-lg'
+                }`}
+              >
+                {isGenerating ? (
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+                ) : (
+                  <div className={`p-4 rounded-full group-hover:scale-110 transition-transform duration-300 ${
+                    selectedAction === 'generate-bulk'
+                      ? 'bg-white/20'
+                      : 'bg-gradient-to-br from-green-500 to-green-600 text-white'
+                  }`}>
+                    <MessageSquare className="h-10 w-10" />
+                  </div>
+                )}
+                <span className="font-bold text-xl">Bulk Generate</span>
+                <span className={`text-sm px-4 py-2 rounded-full font-medium ${
+                  selectedAction === 'generate-bulk'
+                    ? 'opacity-90 bg-white/20'
+                    : 'opacity-70 bg-blue-50'
+                }`}>
+                  {selectedLeads.length} selected
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleExportLeads}
+                className={`h-auto p-8 flex flex-col items-center space-y-4 group transition-all duration-300 ${
+                  selectedAction === 'export-leads'
+                    ? 'business-button shadow-xl'
+                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 hover:shadow-lg'
+                }`}
+              >
+                <div className={`p-4 rounded-full group-hover:scale-110 transition-transform duration-300 ${
+                  selectedAction === 'export-leads'
+                    ? 'bg-white/20'
+                    : 'bg-gradient-to-br from-blue-500 to-blue-600 text-white'
+                }`}>
+                  <Upload className="h-10 w-10" />
+                </div>
+                <span className="font-bold text-xl">Export Leads</span>
+                <span className={`text-sm px-4 py-2 rounded-full font-medium ${
+                  selectedAction === 'export-leads'
+                    ? 'opacity-90 bg-white/20'
+                    : 'opacity-70 bg-blue-50'
+                }`}>
+                  CSV format
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleExportMessages}
+                className={`h-auto p-8 flex flex-col items-center space-y-4 group transition-all duration-300 ${
+                  selectedAction === 'export-messages'
+                    ? 'business-button shadow-xl'
+                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 hover:shadow-lg'
+                }`}
+              >
+                <div className={`p-4 rounded-full group-hover:scale-110 transition-transform duration-300 ${
+                  selectedAction === 'export-messages'
+                    ? 'bg-white/20'
+                    : 'bg-gradient-to-br from-green-500 to-green-600 text-white'
+                }`}>
+                  <MessageCircle className="h-10 w-10" />
+                </div>
+                <span className="font-bold text-xl">Export Messages</span>
+                <span className={`text-sm px-4 py-2 rounded-full font-medium ${
+                  selectedAction === 'export-messages'
+                    ? 'opacity-90 bg-white/20'
+                    : 'opacity-70 bg-blue-50'
+                }`}>
+                  CSV format
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleManageLeads}
+                className={`h-auto p-8 flex flex-col items-center space-y-4 group transition-all duration-300 w-full ${
+                  selectedAction === 'manage-leads'
+                    ? 'business-button shadow-xl'
+                    : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-50 hover:border-blue-400 hover:shadow-lg'
+                }`}
+              >
+                <div className={`p-4 rounded-full group-hover:scale-110 transition-transform duration-300 ${
+                  selectedAction === 'manage-leads'
+                    ? 'bg-white/20'
+                    : 'bg-gradient-to-br from-purple-500 to-purple-600 text-white'
+                }`}>
+                  <Users className="h-10 w-10" />
+                </div>
+                <span className="font-bold text-xl">Manage Leads</span>
+                <span className={`text-sm px-4 py-2 rounded-full font-medium ${
+                  selectedAction === 'manage-leads'
+                    ? 'opacity-90 bg-white/20'
+                    : 'opacity-70 bg-blue-50'
+                }`}>
+                  Advanced view
+                </span>
+              </Button>
+            </div>
+            
+            {/* 提示信息 */}
+            {showNoLeadsMessage && (
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <div className="flex items-center gap-2 text-yellow-800">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                  <span className="font-medium">Please select one or more prospects to generate messages</span>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Prospects List */}
+        <Card className="business-card">
+          <CardHeader className="border-b border-blue-100">
+            <CardTitle className="flex items-center gap-3 text-blue-800 text-xl">
+              <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg text-white">
+                <Users className="h-5 w-5" />
+              </div>
+              Your Prospects ({leads.length})
+            </CardTitle>
+            <CardDescription className="text-blue-600 text-base">
+              Select prospects to generate personalized messages
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            {leads.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center text-white">
+                  <Users className="h-8 w-8" />
+                </div>
+                <h3 className="text-xl font-bold text-blue-900 mb-3">No Prospects Yet</h3>
+                <p className="text-blue-600 mb-6 text-lg">Add your first prospect to get started</p>
+                <Button 
+                  onClick={() => setShowLeadForm(true)}
+                  className="business-button"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add First Prospect
+                </Button>
+              </div>
+            ) : (
+              <SimplifiedLeadsTable 
+                leads={leads}
+                selectedLeads={selectedLeads}
+                onSelectionChange={setSelectedLeads}
+                onGenerateMessage={handleGenerateMessage}
+                isGenerating={isGenerating}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Message Generator Modal */}
+        {showMessageGenerator && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-blue-900">
+                    {isBulkMode ? 'Generate Bulk Messages' : 'Generate Personalized Message'}
+                  </h2>
+                  <Button
+                    onClick={() => setShowMessageGenerator(false)}
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-500 hover:text-gray-700"
                   >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add First Prospect
+                    ✕
                   </Button>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {leads?.map((lead: Lead) => {
-                    const isGeneratingForThisLead = generatingLeadId === lead.id;
-                    const displayRole = lead.role === 'HR总监' ? 'HR Director' : lead.role;
-                    return (
-                      <div
-                        key={lead.id}
-                        className="flex items-center justify-between p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-all duration-200"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-blue-100 rounded-full">
-                            <Building2 className="h-4 w-4 text-blue-600" />
-                          </div>
-                          <div>
-                            <div className="font-semibold text-blue-900">{lead.name}</div>
-                            <div className="text-sm text-blue-600">{displayRole} at {lead.company}</div>
-                          </div>
-                        </div>
-                        <Button 
-                          size="sm" 
-                          disabled={isGeneratingForThisLead}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleGenerateMessage(lead);
-                          }}
-                          className="business-button"
-                        >
-                          {isGeneratingForThisLead ? 'Generating...' : 'Generate Message'}
-                        </Button>
+                {isBulkMode ? (
+                  <p className="text-blue-600 mt-2">
+                    Generating messages for <span className="font-semibold">{selectedLeads.length} selected prospects</span>
+                  </p>
+                ) : selectedLeadForMessage && (
+                  <p className="text-blue-600 mt-2">
+                    Generating message for: <span className="font-semibold">{selectedLeadForMessage.name}</span>
+                    {selectedLeadForMessage.company && ` at ${selectedLeadForMessage.company}`}
+                  </p>
+                )}
+              </div>
+              
+              <div className="p-6 space-y-6">
+                {/* Lead Selection (if multiple leads selected) */}
+                {selectedLeads.length > 1 && !selectedLeadForMessage && (
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Select a prospect to generate message for:
+                    </label>
+                    <div className="grid gap-2">
+                      {selectedLeads.map((leadId) => {
+                        const lead = leads.find((l: Lead) => l.id === leadId);
+                        return lead ? (
+                          <Button
+                            key={leadId}
+                            onClick={() => setSelectedLeadForMessage(lead)}
+                            variant="outline"
+                            className="justify-start text-left h-auto p-4"
+                          >
+                            <div>
+                              <div className="font-medium">{lead.name}</div>
+                              <div className="text-sm text-gray-600">{lead.role}</div>
+                              {lead.company && (
+                                <div className="text-sm text-gray-500">{lead.company}</div>
+                              )}
+                            </div>
+                          </Button>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Message Settings */}
+                {(selectedLeadForMessage || isBulkMode) && (
+                  <>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Custom Context (Optional)
+                        </label>
+                        <textarea
+                          value={customContext}
+                          onChange={(e) => setCustomContext(e.target.value)}
+                          placeholder="Add any specific context, requirements, or notes for the message generation..."
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                          rows={4}
+                        />
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
-          {/* Message History */}
-          <div className="lg:col-span-2">
-            <MessageHistory selectedLead={selectedLead} />
-          </div>
-        </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Message Style
+                          </label>
+                          <select
+                            value={messageStyle}
+                            onChange={(e) => setMessageStyle(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="professional">Professional</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="casual">Casual</option>
+                            <option value="formal">Formal</option>
+                            <option value="enthusiastic">Enthusiastic</option>
+                          </select>
+                        </div>
 
-        {/* Right Side Features */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <MessageSettings 
-            preferences={userPreferences}
-            onPreferencesChange={setUserPreferences}
-            templates={templates}
-            onTemplateSave={handleTemplateSave}
-            onTemplateDelete={handleTemplateDelete}
-          />
-          <TemplateSelector 
-            onTemplateSelected={handleTemplateSelected}
-            onTemplateApplied={handleTemplateApplied}
-          />
-          {selectedLead && (
-            <LinkedInAnalyzer 
-              lead={selectedLead}
-              onProfileAnalyzed={handleProfileAnalyzed}
-            />
-          )}
-        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Message Target
+                          </label>
+                          <select
+                            value={messageTarget}
+                            onChange={(e) => setMessageTarget(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="connection">Connection Request</option>
+                            <option value="business">Business Opportunity</option>
+                            <option value="recruitment">Recruitment</option>
+                            <option value="networking">Networking</option>
+                            <option value="event">Event Invitation</option>
+                            <option value="collaboration">Collaboration</option>
+                          </select>
+                        </div>
+                      </div>
 
-        {/* Advanced Message Generator */}
-        {selectedLead && (
-          <div ref={generatorRef}>
-            <AdvancedMessageGenerator 
-              lead={selectedLead}
-              onMessageGenerated={handleMessageGenerated}
-            />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Message Length
+                          </label>
+                          <select
+                            value={messageLength}
+                            onChange={(e) => setMessageLength(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="short">Short (100-200 chars)</option>
+                            <option value="standard">Standard (200-400 chars)</option>
+                            <option value="detailed">Detailed (400-500 chars)</option>
+                          </select>
+                        </div>
+
+                        <div className="flex items-center space-x-3 pt-8">
+                          <input
+                            type="checkbox"
+                            id="includeEmojis"
+                            checked={includeEmojis}
+                            onChange={(e) => setIncludeEmojis(e.target.checked)}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor="includeEmojis" className="text-sm font-medium text-gray-700">
+                            Include emojis
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end space-x-3 pt-4">
+                      <Button
+                        onClick={() => setShowMessageGenerator(false)}
+                        variant="outline"
+                        className="px-6"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleCustomMessageGenerate}
+                        disabled={isGenerating}
+                        className="business-button px-6"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Generating...
+                          </>
+                        ) : (
+                          isBulkMode ? 'Generate Bulk Messages' : 'Generate Message'
+                        )}
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
         {/* Generated Message Display */}
         {generatedMessage && (
-          <div ref={resultRef} className="result-highlight p-6 rounded-xl">
+          <div ref={resultRef} className="result-highlight p-8 rounded-2xl">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-blue-100 rounded-full">
-                  <MessageSquare className="h-5 w-5 text-blue-600" />
+              <div className="flex items-center gap-4 mb-6">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full text-white">
+                  <MessageSquare className="h-6 w-6" />
                 </div>
-                <h2 className="text-xl font-bold text-blue-900">Generated Message</h2>
+                <h2 className="text-2xl font-bold text-blue-900">Generated Message</h2>
               </div>
-              <div className="bg-white p-6 rounded-lg border border-blue-200 shadow-sm">
-                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
+              <div className="bg-white p-8 rounded-xl border border-blue-200 shadow-lg">
+                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap text-lg">
                   {generatedMessage}
                 </p>
               </div>
-              <div className="flex items-center justify-between mt-4">
-                <div className="text-sm text-blue-600">
+              <div className="flex items-center justify-between mt-6">
+                <div className="text-sm text-blue-600 bg-blue-50 px-4 py-2 rounded-full font-medium">
                   Characters: {generatedMessage.length}
                 </div>
                 <Button 
                   onClick={() => navigator.clipboard.writeText(generatedMessage)}
-                  className="business-button"
+                  className="business-button px-8 py-3"
                 >
+                  <Copy className="h-4 w-4 mr-2" />
                   Copy Message
                 </Button>
               </div>

@@ -165,7 +165,7 @@ export function MessageHistory({ selectedLead }: MessageHistoryProps) {
                         handleStatusChange(message.id, value)
                       }
                     >
-                      <SelectTrigger className="w-24 h-8">
+                      <SelectTrigger className="w-28 h-8">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

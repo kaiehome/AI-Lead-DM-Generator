@@ -134,7 +134,7 @@ export function MessageSettings({
                 value={preferences.default_style} 
                 onValueChange={(value: MessageStyle) => handlePreferenceChange('default_style', value)}
               >
-                <SelectTrigger className="border-blue-200">
+                <SelectTrigger className="border-blue-200 min-w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,7 +159,7 @@ export function MessageSettings({
                 value={preferences.default_target} 
                 onValueChange={(value: MessageTarget) => handlePreferenceChange('default_target', value)}
               >
-                <SelectTrigger className="border-blue-200">
+                <SelectTrigger className="border-blue-200 min-w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -184,7 +184,7 @@ export function MessageSettings({
                 value={preferences.preferred_length} 
                 onValueChange={(value: MessageLength) => handlePreferenceChange('preferred_length', value)}
               >
-                <SelectTrigger className="border-blue-200">
+                <SelectTrigger className="border-blue-200 min-w-[160px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
